@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'records',
     'users',
     'rest_framework',
+    'storages',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -153,3 +155,8 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
+
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.ftp.FTPStorage'
+FTP_STORAGE_LOCATION = 'ftp://ce684cde91_14019:63d2881e70adf10@yurika.gransy.com:21/media'

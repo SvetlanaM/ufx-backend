@@ -4,10 +4,13 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 from datetime import datetime
 
+
 CALL_TYPES = (
     ('1','Incoming'),
     ('2','Outcoming'),
 )
+
+
 class Record(models.Model):
     phone_regex = RegexValidator(regex = r'^42(0|1){1}\d{3}\d{3}\d{3}$', message='Phone number must be in format 421915123456')
     phone_number = models.CharField(validators = [phone_regex], max_length = 255)
