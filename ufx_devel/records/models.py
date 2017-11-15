@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from datetime import datetime
-
+from employees.models import Employee
 
 CALL_TYPES = (
     ('1','Incoming'),
@@ -19,6 +19,7 @@ class Record(models.Model):
     is_archived = models.BooleanField(default = False)
     upload_to = models.FileField(upload_to='', blank = True, null = True)
     call_type = models.CharField(max_length = 1, choices = CALL_TYPES, blank = True, null = True)
+    employee = models.ForeignKey('employees.Employee', models.SET_NULL, blank = True, null = True)
 
 
     class Meta:
