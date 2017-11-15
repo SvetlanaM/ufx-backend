@@ -22,7 +22,7 @@ class RecordAdmin(admin.ModelAdmin):
     list_per_page = 50
 
     def url_link(self, obj):
-        ftp_url = "ftp://yurika.gransy.com/media"
+        ftp_url = "ftp://ufx_admin@192.168.1.181/media"
         return format_html("<a href='{ftp}/{url}' target='_blank'>{url}</a>", ftp=ftp_url, url=obj.upload_to)
 
 

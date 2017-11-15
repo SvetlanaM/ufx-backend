@@ -25,7 +25,7 @@ SECRET_KEY = 'wbm%nr4!1v-ikejxc-nsmo4mp6qn@q%u%@xxrsd#6h047qdrqu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0:8000', 'localhost', '127.0.0.1', '*', '0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0:8000', '192.168.1.181', 'localhost', '127.0.0.1', '*', '0.0.0.0']
 
 
 # Application definition
@@ -88,8 +88,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'hovno',
-        'HOST': 'db',
+        'PASSWORD': 'ufx1234',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -150,7 +150,7 @@ STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join('/srv/ufx_devel/static/'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 MEDIA_URL = 'media/'
@@ -159,4 +159,8 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.ftp.FTPStorage'
-FTP_STORAGE_LOCATION = 'ftp://ce684cde91_14019:63d2881e70adf10@yurika.gransy.com:21/media'
+#FTP_STORAGE_LOCATION = 'ftp://192.168.1.181:21/media'
+
+
+
+FTP_STORAGE_LOCATION = 'ftp://ufx_admin:ufx1234@192.168.1.181:21/home/ufx_admin/media'
