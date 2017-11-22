@@ -10,14 +10,14 @@ class BlackListAdmin(admin.ModelAdmin):
     search_fields = ('phone_number',)
     list_editable = ('is_blocked',)
     list_filter = ('is_blocked',)
-    list_per_page = 50
+    list_per_page = 10
 
 
 
 
 class RecordAdmin(admin.ModelAdmin):
     list_display = ('phone_number', 'call_date', 'call_type', 'url_link', 'employee')
-    search_fields = ('phone_number', 'call_date', )
+    search_fields = ('phone_number', 'call_date')
     list_filter = ('employee','call_date', 'call_type')
     list_per_page = 50
 
