@@ -19,4 +19,4 @@ class Employee(models.Model):
         verbose_name_plural = "Employees"
 
     def __str__(self):
-        return "%s" %(self.sim_card_number)
+        return "%s %s" %(self.first_name, self.last_name)
