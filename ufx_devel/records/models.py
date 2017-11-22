@@ -40,7 +40,7 @@ class Record(models.Model):
 def send_alert_email(sender, instance, **kwargs):
     if instance.is_recorded == False:
         subject = 'Nenahrávají se hovory'
-        mesagge = 'Na čísle %s neprobíhá záznam hovorů zaměstnance %s %s' %(instance.employee.phone_number, instance.employee.first_name, instance.employee.last_name, instance.created_date)
+        mesagge = 'Na čísle %s neprobíhá záznam hovorů zaměstnance %s %s.' %(instance.employee.phone_number, instance.employee.first_name, instance.employee.last_name)
         from_email = settings.EMAIL_HOST_USER
         send_mail(subject, mesagge, from_email, ["svetlana@margetova.eu"], fail_silently=False)
 
