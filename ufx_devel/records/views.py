@@ -14,19 +14,24 @@ class RecordCreateAPIView(generics.CreateAPIView):
 
 
     def perform_create(self, serializer):
+
         data = self.request.data
 
         if self.request.data.get('is_recorded') == '0' or self.request.data.get('is_recorded') == 'False':
             is_recorded = bool(0)
         else:
             is_recorded = bool(1)
-            
+
+        
         serializer.save(
             phone_number = data['phone_number'],
             upload_to = self.request.data.get('upload_to'),
             call_date = data['call_date'],
             is_recorded = is_recorded
         )
+
+
+
 
         return Response({'received data': self.request.data})
 

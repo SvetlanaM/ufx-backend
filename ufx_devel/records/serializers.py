@@ -8,6 +8,8 @@ class RecordSerializer(serializers.HyperlinkedModelSerializer):
     upload_to = serializers.FileField()
     #employee = EmployeeSerializer(many = False, read_only = False)
     employee = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), many = False, read_only = False)
+    upload_to = serializers.FileField(allow_empty_file=True, required = False)
+
 
 
     class Meta:
