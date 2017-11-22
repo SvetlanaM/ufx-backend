@@ -5,6 +5,13 @@ from django.conf import settings
 from datetime import datetime
 from employees.models import Employee
 
+
+from django.db.models import signals
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.conf import settings
+from django.core.mail import send_mail
+
 CALL_TYPES = (
     ('1','Incoming'),
     ('2','Outcoming'),
@@ -29,6 +36,15 @@ class Record(models.Model):
 
     def __str__(self):
         return "%s---%s" %(self.phone_number, self.call_date.strftime("%d.%m.%Y"))
+
+def send_alert_email(sender, instance, **kwargs):
+    if instance.is_recorded == False:
+        subject = 'Nenahrávají se hovory'
+        mesagge = 'Na čísle %s neprobíhá záznam hovorů zaměstnance %s %s' %(instance.employee.phone_number, instance.employee.first_name, instance.employee.last_name, instance.created_date)
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, mesagge, from_email, ["svetlana@margetova.eu"], fail_silently=False)
+
+post_save.connect(send_alert_email, sender=Record)
 
 class BlackList(models.Model):
     phone_regex = RegexValidator(regex = r'^42(0|1){1}\d{3}\d{3}\d{3}$', message='Phone number must be in format 421915123456')
