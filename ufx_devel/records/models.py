@@ -20,6 +20,7 @@ class Record(models.Model):
     upload_to = models.FileField(upload_to='', blank = True, null = True)
     call_type = models.CharField(max_length = 1, choices = CALL_TYPES, blank = True, null = True)
     employee = models.ForeignKey('employees.Employee', models.SET_NULL, blank = True, null = True)
+    is_recorded = models.BooleanField(default = True, null = True, blank = True)
 
 
     class Meta:

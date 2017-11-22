@@ -14,7 +14,9 @@ class RecordSerializer(serializers.HyperlinkedModelSerializer):
             'upload_to',
             'call_type',
             'employee',
+            'is_recorded',
         ]
+
 
 
 class BlackListSerializer(serializers.HyperlinkedModelSerializer):
