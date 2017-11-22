@@ -12,19 +12,18 @@ class RecordCreateAPIView(generics.CreateAPIView):
     parser_classes = (MultiPartParser, FileUploadParser,)
     queryset = Record.objects.all()
 
+
     def perform_create(self, serializer):
         data = self.request.data
+
         serializer.save(
             phone_number = data['phone_number'],
             upload_to = self.request.data.get('upload_to'),
             call_date = data['call_date'],
-            employee = data['employee'],
             is_recorded = data['is_recorded']
         )
 
         return Response({'received data': self.request.data})
-
-
 
 
 class BlackListAPIView(generics.ListAPIView):

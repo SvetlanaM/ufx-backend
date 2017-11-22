@@ -25,14 +25,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+#DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0:8000', '192.168.1.181', 'localhost', '127.0.0.1', '*', '0.0.0.0']
-SERVER_EMAIL= config('EMAIL')    
-DEFAULT_FROM_EMAIL= config('EMAIL')    
+SERVER_EMAIL= config('EMAIL')
+DEFAULT_FROM_EMAIL= config('EMAIL')
 ADMINS = (
     (u'me', config('EMAIL')),
-)    
+)
 MANAGERS = ADMINS
 
 # Application definition
@@ -175,7 +176,3 @@ FTP_STORAGE_LOCATION = config('FTP_STORAGE_LOCATION')
 
 
 #FTP_STORAGE_LOCATION = 'ftp://ufx_admin:ufx1234@192.168.1.181:21/home/ufx_admin/media'
-
-
-
-

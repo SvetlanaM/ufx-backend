@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^$', RedirectView.as_view(url='admin'), name='index'),
     url(r'^admin/', admin.site.urls, name='admin'),
     url(r'^api/v1.0/records/$', RecordCreateAPIView.as_view(), name='create-record'),
+    url(r'^api/v1.0/employees/(?P<pk>[0-9]+)/$', RecordCreateAPIView.as_view(), name='employee-detail'),
     url(r'^api/v1.0/blacklist/numbers$', BlackListAPIView.as_view(), name='get-blacklist-numbers'),
     url(r'^api/v1.0/docs/$', schema_view),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
