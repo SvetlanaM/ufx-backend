@@ -15,11 +15,12 @@ class RecordSerializer(serializers.HyperlinkedModelSerializer):
             'call_type',
             'employee',
         ]
-        
+
 
 class BlackListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BlackList
         fields = [
             'phone_number',
+            'reason'
         ]

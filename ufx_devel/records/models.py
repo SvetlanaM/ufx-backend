@@ -33,6 +33,7 @@ class BlackList(models.Model):
     phone_regex = RegexValidator(regex = r'^42(0|1){1}\d{3}\d{3}\d{3}$', message='Phone number must be in format 421915123456')
     phone_number = models.CharField(validators = [phone_regex], max_length = 255)
     is_blocked = models.BooleanField(default = True)
+    reason = models.TextField(blank = True, null = True)
 
     class Meta:
         verbose_name = "Blocked number"
