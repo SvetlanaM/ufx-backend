@@ -17,8 +17,8 @@ class BlackListAdmin(admin.ModelAdmin):
 
 class RecordAdmin(admin.ModelAdmin):
     list_display = ('phone_number', 'call_date', 'call_type', 'url_link', 'employee')
-    search_fields = ('phone_number', 'call_date',)
-    list_filter = ('phone_number','call_date', 'call_type')
+    search_fields = ('phone_number', 'call_date', )
+    list_filter = ('employee','call_date', 'call_type')
     list_per_page = 50
 
     def url_link(self, obj):

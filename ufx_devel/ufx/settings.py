@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from decouple import config
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,15 +22,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'wbm%nr4!1v-ikejxc-nsmo4mp6qn@q%u%@xxrsd#6h047qdrqu'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['0.0.0.0:8000', '192.168.1.181', 'localhost', '127.0.0.1', '*', '0.0.0.0']
-
+SERVER_EMAIL= config('EMAIL')    
+DEFAULT_FROM_EMAIL= config('EMAIL')    
+ADMINS = (
+    (u'me', config('EMAIL')),
+)    
+MANAGERS = ADMINS
 
 # Application definition
+
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'storages',
     'rest_framework_swagger',
+    'django_archive',
 ]
 
 
@@ -88,22 +101,14 @@ WSGI_APPLICATION = 'ufx.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': config('NAME'),
         'USER': 'postgres',
-        'PASSWORD': 'ufx1234',
-        'HOST': 'localhost',
+        'PASSWORD': config('PASSWORD'),
+        'HOST': config('HOST'),
         'PORT': '5432',
     }
 }
 
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-"""
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -128,7 +133,12 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
+    ),
 }
 
 
@@ -161,8 +171,11 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.ftp.FTPStorage'
-#FTP_STORAGE_LOCATION = 'ftp://192.168.1.181:21/media'
+FTP_STORAGE_LOCATION = config('FTP_STORAGE_LOCATION')
+
+
+#FTP_STORAGE_LOCATION = 'ftp://ufx_admin:ufx1234@192.168.1.181:21/home/ufx_admin/media'
 
 
 
-FTP_STORAGE_LOCATION = 'ftp://ufx_admin:ufx1234@192.168.1.181:21/home/ufx_admin/media'
+

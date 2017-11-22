@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework import routers
-from records.views import RecordCreateAPIView
+from records.views import RecordCreateAPIView, BlackListAPIView
 from rest_framework_swagger.views import get_swagger_view
 from django.views.generic.base import RedirectView
 
@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^$', RedirectView.as_view(url='admin'), name='index'),
     url(r'^admin/', admin.site.urls, name='admin'),
     url(r'^api/v1.0/records/$', RecordCreateAPIView.as_view(), name='create-record'),
+    url(r'^api/v1.0/blacklist/numbers$', BlackListAPIView.as_view(), name='get-blacklist-numbers'),
     url(r'^api/v1.0/docs/$', schema_view),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
