@@ -1,15 +1,19 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from django.conf import settings
 from datetime import datetime
-
+from employees.models import Employee
+from django.db.models import signals
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.conf import settings
+from django.core.mail import send_mail
+from decouple import config
 
 CALL_TYPES = (
     ('1','Incoming'),
     ('2','Outcoming'),
 )
-
 
 class Record(models.Model):
     phone_regex = RegexValidator(regex = r'^42(0|1){1}\d{3}\d{3}\d{3}$', message='Phone number must be in format 421915123456')
@@ -19,7 +23,8 @@ class Record(models.Model):
     is_archived = models.BooleanField(default = False)
     upload_to = models.FileField(upload_to='', blank = True, null = True)
     call_type = models.CharField(max_length = 1, choices = CALL_TYPES, blank = True, null = True)
-
+    employee = models.ForeignKey('employees.Employee', models.SET_NULL, blank = True, null = True)
+    is_recorded = models.NullBooleanField(default = True, null = True, blank = True)
 
     class Meta:
         verbose_name = "Record"
@@ -28,10 +33,20 @@ class Record(models.Model):
     def __str__(self):
         return "%s---%s" %(self.phone_number, self.call_date.strftime("%d.%m.%Y"))
 
+def send_alert_email(sender, instance, **kwargs):
+    if instance.is_recorded == False:
+        subject = 'Nenahrávají se hovory'
+        mesagge = 'Na čísle %s neprobíhá záznam hovorů zaměstnance %s %s.' %(instance.employee.phone_number, instance.employee.first_name, instance.employee.last_name)
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, mesagge, from_email, [config('EMAIL_USER1'), config('EMAIL_USER2')], fail_silently=False)
+
+post_save.connect(send_alert_email, sender=Record)
+
 class BlackList(models.Model):
     phone_regex = RegexValidator(regex = r'^42(0|1){1}\d{3}\d{3}\d{3}$', message='Phone number must be in format 421915123456')
     phone_number = models.CharField(validators = [phone_regex], max_length = 255)
-    is_blocked = models.BooleanField(default = False)
+    is_blocked = models.BooleanField(default = True)
+    reason = models.TextField(blank = True, null = True)
 
     class Meta:
         verbose_name = "Blocked number"

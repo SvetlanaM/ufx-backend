@@ -4,3 +4,6 @@ psycopg2
 djangorestframework
 gunicorn==19.3.0
 django-storages
+django-rest-swagger
+django-archive
+python-decouple
