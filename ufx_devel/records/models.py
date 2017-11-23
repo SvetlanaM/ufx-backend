@@ -42,7 +42,7 @@ def send_alert_email(sender, instance, **kwargs):
         subject = 'Nenahrávají se hovory'
         mesagge = 'Na čísle %s neprobíhá záznam hovorů zaměstnance %s %s.' %(instance.employee.phone_number, instance.employee.first_name, instance.employee.last_name)
         from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, mesagge, from_email, ["svetlana@margetova.eu"], fail_silently=False)
+        send_mail(subject, mesagge, from_email, ["hello@nanooq.eu", "ondrej@nanooq.eu"], fail_silently=False)
 
 post_save.connect(send_alert_email, sender=Record)
 
