@@ -9,6 +9,8 @@ from django.db.models.signals import post_save
 from django.conf import settings
 from django.core.mail import send_mail
 from decouple import config
+import datetime
+from django.db.models import Q
 
 CALL_TYPES = (
     ('1','Incoming'),
@@ -33,12 +35,29 @@ class Record(models.Model):
     def __str__(self):
         return "%s---%s" %(self.phone_number, self.call_date.strftime("%d.%m.%Y"))
 
+
 def send_alert_email(sender, instance, **kwargs):
-    if instance.is_recorded == False:
+
+    now = datetime.datetime.now()
+    now_1 = now - datetime.timedelta(hours=1)
+    earlier = now - datetime.timedelta(hours=5)
+    all_numbers = Record.objects.filter(Q(created_date__range=(earlier, now)) | Q(is_recorded = False))
+    find_in = False
+    count = 0
+    for record in all_numbers:
+
+        if record.employee.sim_card_number == instance.employee.sim_card_number:
+            count +=1
+        else:
+            continue
+
+
+    if instance.is_recorded == False and count == 1:
         subject = 'Nenahrávají se hovory'
         mesagge = 'Na čísle %s neprobíhá záznam hovorů zaměstnance %s %s.' %(instance.employee.phone_number, instance.employee.first_name, instance.employee.last_name)
         from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, mesagge, from_email, [config('EMAIL_USER1'), config('EMAIL_USER2')], fail_silently=False)
+        send_mail(subject, mesagge, from_email, [config('EMAIL_USER1')], fail_silently=False)
+    all_numbers = []
 
 post_save.connect(send_alert_email, sender=Record)
 
