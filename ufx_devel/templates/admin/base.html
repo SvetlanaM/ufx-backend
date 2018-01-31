@@ -1,19 +1,11 @@
-{% load i18n static %}
-{% load staticfiles %}
-
-<!DOCTYPE html>
-  {% get_current_language as LANGUAGE_CODE %}
-  {% get_current_language_bidi as LANGUAGE_BIDI %}
-    <html lang="{{ LANGUAGE_CODE|default:"en-us" }}"
-        {% if LANGUAGE_BIDI %}
-            dir="rtl"
-        {% endif %}>
-        <head>
-            <title>UFX administration</title>
-            <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" />
-            <link rel="icon" type="image/x-icon" href="https://trello-attachments.s3.amazonaws.com/52589bca65b0b14e1d004d94/581efa2dafc1d1f2ca807a35/0a626f843ab66223d1cb08b8ed7003c6/favicon.ico" />
-            {% block extrastyle %}
-            <style>
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+{% block extrastyle %}
+<style>
                 #header {
                     background: #fff;
                     border-bottom: 1px solid #eee;
@@ -115,81 +107,90 @@
                     border-bottom-color: transparent;
                 }
             </style>
+{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+{% block extrahead %}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+{% load i18n %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+
+<!-- Container -->
+<div id="container">
+
+    {% if not is_popup %}
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+            <h1><strong>UFX administration - recorded calls</strong></h1>
+        </div>
+        {% block usertools %}
+        {% if has_permission %}
+        <div id="user-tools">
+            {% block welcome-msg %}
+                {% trans 'Welcome,' %}
+                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
             {% endblock %}
-
-            {% if LANGUAGE_BIDI %}
-                <link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />
-            {% endif %}
-
-            {% block blockbots %}
-                <meta name="robots" content="NONE,NOARCHIVE" />
-            {% endblock %}
-        </head>
-
-        {% load i18n %}
-            <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
-    data-admin-utc-offset="{% now "Z" %}">
-                <div id="container">
-                    {% if not is_popup %}
-                        <div id="header">
-                            <div id="branding"><a href="{% url 'admin:index' %}"><img class="logo" src="{% static 'img/ufx_logo.png' %}" /></a>
-                            </div>
-                            {% block usertools %}
-                                {% if has_permission %}
-                                    <div id="user-tools">
-                                        {% block welcome-msg %}
-                                            {% trans 'Welcome,' %}<strong>{% firstof user.last_name user.username %}</strong>.
-                                        {% endblock %}
-
-                                        {% block userlinks %}
-                                            {% if user.has_usable_password %}
-                                                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
-                                            {% endif %}
-                                            <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
-                                        {% endblock %}
-                                    </div>
-                                {% endif %}
-                            {% endblock %}
-                        </div>
-
-                        {% block breadcrumbs %}
-                            <div class="breadcrumbs">
-                                <a href="{% url 'admin:index' %}">Home UFX</a>
-                                {% if title %}
-                                    &rsaquo; {{ title }}
-                                {% endif %}
-                            </div>
-                        {% endblock %}
+            {% block userlinks %}
+                {% if site_url %}
+                    <a href="{{ site_url }}">{% trans 'View site' %}</a> /
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
                     {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                {% endif %}
+                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+            {% endblock %}
+        </div>
+        {% endif %}
+        {% endblock %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
 
-                    {% block messages %}
-                        {% if messages %}
-                            <ul class="messagelist">
-                                {% for message in messages %}
-                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    {% endblock messages %}
+    {% block messages %}
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
 
-                    <div id="content" class="{% block coltype %}colM{% endblock %}">
-                        {% block content_title %}
-                            {% if title %}
-                                <h1><strong>UFX administration - recorded calls</strong></h1>
-                            {% endif %}
-                        {% endblock %}
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear">
+    </div>
+    <!-- END Content -->
 
-                        {% block content %}
-                            {{ content }}
-                        {% endblock %}
-                        {% block sidebar %}
-                        {% endblock %}
-                        <br class="clear" />
-                    </div>
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
 
-                    {% block footer %}
-                        <div id="footer"></div>
-                    {% endblock %}
-                </div>
-            </body>
-        </html>
+</body>
+</html>
