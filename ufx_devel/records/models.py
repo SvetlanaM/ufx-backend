@@ -35,7 +35,7 @@ class Record(models.Model):
     def __str__(self):
         return "%s---%s" %(self.phone_number, self.call_date.strftime("%d.%m.%Y"))
 
-
+"""  
 def send_alert_email(sender, instance, **kwargs):
 
     now = datetime.datetime.now()
@@ -60,6 +60,8 @@ def send_alert_email(sender, instance, **kwargs):
     all_numbers = []
 
 post_save.connect(send_alert_email, sender=Record)
+
+"""
 
 class BlackList(models.Model):
     phone_regex = RegexValidator(regex = r'^42(0|1){1}\d{3}\d{3}\d{3}$', message='Phone number must be in format 421915123456')
