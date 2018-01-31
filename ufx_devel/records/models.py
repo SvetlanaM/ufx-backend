@@ -19,7 +19,7 @@ CALL_TYPES = (
 
 class Record(models.Model):
     phone_regex = RegexValidator(regex = r'^42(0|1){1}\d{3}\d{3}\d{3}$', message='Phone number must be in format 421915123456')
-    phone_number = models.CharField(validators = [phone_regex], max_length = 255)
+    phone_number = models.CharField(max_length = 255)
     call_date = models.DateTimeField(auto_now_add = False)
     created_date = models.DateTimeField(auto_now_add = True, auto_now = False)
     is_archived = models.BooleanField(default = False)
