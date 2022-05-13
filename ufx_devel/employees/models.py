@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
-
 class Employee(models.Model):
     first_name = models.CharField(max_length = 50, blank = True, null = True)
     last_name = models.CharField(max_length = 50, blank = True, null = True)
@@ -12,7 +11,6 @@ class Employee(models.Model):
     updated_date = models.DateTimeField(auto_now_add = False, auto_now = True)
     is_active= models.BooleanField(default = True)
     sim_card_number = models.CharField(max_length = 50, primary_key=True)
-
 
     class Meta:
         verbose_name = "Employee"
