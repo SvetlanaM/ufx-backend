@@ -1,6 +1,6 @@
 # UFX backend
 
-> **UFX backend is an app used as administration for managing employes calls and
+> **UFX backend is an app used as administration for managing employees calls and
 > as a REST API for the Android mobile application.**
 
 ### Technologies
